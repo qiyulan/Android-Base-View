@@ -2,6 +2,7 @@ package moe.xing.baseview;
 
 import android.content.Context;
 import android.support.annotation.IntDef;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +30,9 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
     public static final int TYPE_EMPTY = 1001;
     public static final int TYPE_ERROR = 1002;
     public static final int TYPE_LOADING = 1003;
-    private static View emptyView, loadingView, errorView;
+    private View emptyView, loadingView, errorView;
+    @LayoutRes
+    private int emptyViewID, loadingViewID, errorViewID;
     @NonNull
     private BaseRecyclerViewAdapter<T, ? extends RecyclerView.ViewHolder> mAdapter;
     private int state = STATE_NORMAL;
@@ -37,29 +40,38 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
     public StatusRecyclerViewAdapter(@NonNull BaseRecyclerViewAdapter<T, ? extends RecyclerView.ViewHolder> wrapped,
                                      @NonNull Context context) {
         super(wrapped);
-        if (emptyView == null) {
-            emptyView = LayoutInflater.from(context).inflate(R.layout.view_empty, null);
+        int empty = R.layout.view_empty;
+        if (emptyViewID != 0) {
+            empty = emptyViewID;
         }
-        if (loadingView == null) {
-            loadingView = LayoutInflater.from(context).inflate(R.layout.view_loading, null);
+        emptyView = LayoutInflater.from(context).inflate(empty, null);
+
+        int loading = R.layout.view_loading;
+        if (loadingViewID != 0) {
+            loading = loadingViewID;
         }
-        if (errorView == null) {
-            errorView = LayoutInflater.from(context).inflate(R.layout.view_error, null);
+        loadingView = LayoutInflater.from(context).inflate(loading, null);
+
+        int error = R.layout.view_error;
+        if (errorViewID != 0) {
+            error = errorViewID;
         }
+        errorView = LayoutInflater.from(context).inflate(error, null);
+
         this.state = STATE_LOADING;
         this.mAdapter = wrapped;
     }
 
-    public static void setEmptyView(View emptyView) {
-        StatusRecyclerViewAdapter.emptyView = emptyView;
+    public void setEmptyViewID(int emptyViewID) {
+        this.emptyViewID = emptyViewID;
     }
 
-    public static void setLoadingView(View loadingView) {
-        StatusRecyclerViewAdapter.loadingView = loadingView;
+    public void setLoadingViewID(int loadingViewID) {
+        this.loadingViewID = loadingViewID;
     }
 
-    public static void setErrorView(View errorView) {
-        StatusRecyclerViewAdapter.errorView = errorView;
+    public void setErrorViewID(int errorViewID) {
+        this.errorViewID = errorViewID;
     }
 
     @State
