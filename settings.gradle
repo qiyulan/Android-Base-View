@@ -1,0 +1,2 @@
+include ':baseview'
+project(':baseview').projectDir = new File('./baseview')
