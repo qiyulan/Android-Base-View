@@ -30,9 +30,8 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
     public static final int TYPE_EMPTY = 1001;
     public static final int TYPE_ERROR = 1002;
     public static final int TYPE_LOADING = 1003;
-    private View emptyView, loadingView, errorView;
     @LayoutRes
-    private int emptyViewID, loadingViewID, errorViewID;
+    private int emptyViewID = 0, loadingViewID = 0, errorViewID = 0;
     @NonNull
     private BaseRecyclerViewAdapter<T, ? extends RecyclerView.ViewHolder> mAdapter;
     private int state = STATE_NORMAL;
@@ -40,24 +39,6 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
     public StatusRecyclerViewAdapter(@NonNull BaseRecyclerViewAdapter<T, ? extends RecyclerView.ViewHolder> wrapped,
                                      @NonNull Context context) {
         super(wrapped);
-        int empty = R.layout.view_empty;
-        if (emptyViewID != 0) {
-            empty = emptyViewID;
-        }
-        emptyView = LayoutInflater.from(context).inflate(empty, null);
-
-        int loading = R.layout.view_loading;
-        if (loadingViewID != 0) {
-            loading = loadingViewID;
-        }
-        loadingView = LayoutInflater.from(context).inflate(loading, null);
-
-        int error = R.layout.view_error;
-        if (errorViewID != 0) {
-            error = errorViewID;
-        }
-        errorView = LayoutInflater.from(context).inflate(error, null);
-
         this.state = STATE_LOADING;
         this.mAdapter = wrapped;
     }
@@ -138,10 +119,25 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_EMPTY:
+                int empty = R.layout.view_empty;
+                if (emptyViewID != 0) {
+                    empty = emptyViewID;
+                }
+                View emptyView = LayoutInflater.from(parent.getContext()).inflate(empty, null);
                 return new SimpleViewHolder(emptyView);
             case TYPE_ERROR:
+                int error = R.layout.view_error;
+                if (errorViewID != 0) {
+                    error = errorViewID;
+                }
+                View errorView = LayoutInflater.from(parent.getContext()).inflate(error, null);
                 return new SimpleViewHolder(errorView);
             case TYPE_LOADING:
+                int loading = R.layout.view_loading;
+                if (loadingViewID != 0) {
+                    loading = loadingViewID;
+                }
+                View loadingView = LayoutInflater.from(parent.getContext()).inflate(loading, null);
                 return new SimpleViewHolder(loadingView);
         }
         return super.onCreateViewHolder(parent, viewType);
