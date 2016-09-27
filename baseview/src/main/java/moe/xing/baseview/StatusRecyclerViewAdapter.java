@@ -18,8 +18,11 @@ import java.util.List;
 
 /**
  * Created by Hehanbo on 2016/7/27 0027.
+ * <p>
+ * 带状态的 rv
+ * View 的优先级最高,ID其次,最后回退到自带的
  */
-
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
 
 
@@ -31,7 +34,8 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
     public static final int TYPE_ERROR = 1002;
     public static final int TYPE_LOADING = 1003;
     @LayoutRes
-    private int emptyViewID = 0, loadingViewID = 0, errorViewID = 0;
+    private static int emptyViewID = 0, loadingViewID = 0, errorViewID = 0;
+    private View emptyView = null, loadingView = null, errorView = null;
     @NonNull
     private BaseRecyclerViewAdapter<T, ? extends RecyclerView.ViewHolder> mAdapter;
     private int state = STATE_NORMAL;
@@ -43,16 +47,28 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
         this.mAdapter = wrapped;
     }
 
-    public void setEmptyViewID(int emptyViewID) {
-        this.emptyViewID = emptyViewID;
+    public static void setEmptyViewID(int emptyViewID) {
+        StatusRecyclerViewAdapter.emptyViewID = emptyViewID;
     }
 
-    public void setLoadingViewID(int loadingViewID) {
-        this.loadingViewID = loadingViewID;
+    public static void setLoadingViewID(int loadingViewID) {
+        StatusRecyclerViewAdapter.loadingViewID = loadingViewID;
     }
 
-    public void setErrorViewID(int errorViewID) {
-        this.errorViewID = errorViewID;
+    public static void setErrorViewID(int errorViewID) {
+        StatusRecyclerViewAdapter.errorViewID = errorViewID;
+    }
+
+    public void setEmptyView(View emptyView) {
+        this.emptyView = emptyView;
+    }
+
+    public void setLoadingView(View loadingView) {
+        this.loadingView = loadingView;
+    }
+
+    public void setErrorView(View errorView) {
+        this.errorView = errorView;
     }
 
     @State
@@ -119,6 +135,9 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_EMPTY:
+                if (emptyView != null) {
+                    return new SimpleViewHolder(emptyView);
+                }
                 int empty = R.layout.view_empty;
                 if (emptyViewID != 0) {
                     empty = emptyViewID;
@@ -126,6 +145,9 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
                 View emptyView = LayoutInflater.from(parent.getContext()).inflate(empty, null);
                 return new SimpleViewHolder(emptyView);
             case TYPE_ERROR:
+                if (errorView != null) {
+                    return new SimpleViewHolder(errorView);
+                }
                 int error = R.layout.view_error;
                 if (errorViewID != 0) {
                     error = errorViewID;
@@ -133,6 +155,9 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
                 View errorView = LayoutInflater.from(parent.getContext()).inflate(error, null);
                 return new SimpleViewHolder(errorView);
             case TYPE_LOADING:
+                if (loadingView != null) {
+                    return new SimpleViewHolder(loadingView);
+                }
                 int loading = R.layout.view_loading;
                 if (loadingViewID != 0) {
                     loading = loadingViewID;
@@ -160,6 +185,14 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
     public void onBindStatueViewHolder(RecyclerView.ViewHolder holder, int position) {
     }
 
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+        if (holder instanceof SimpleViewHolder) {
+            // TODO: 16-9-27 remove from parent
+        }
+    }
+
     @IntDef({STATE_NORMAL, STATE_EMPTY, STATE_ERROR, STATE_LOADING})
     @Retention(RetentionPolicy.SOURCE)
     public @interface State {
@@ -170,5 +203,4 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
             super(itemView);
         }
     }
-
 }

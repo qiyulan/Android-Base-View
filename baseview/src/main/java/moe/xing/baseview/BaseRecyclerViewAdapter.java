@@ -11,7 +11,7 @@ import java.util.List;
  * <p>
  * RecyclerView 的基础适配器
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class BaseRecyclerViewAdapter<T, R extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<R> {
     protected List<T> datas = new ArrayList<>();
 
