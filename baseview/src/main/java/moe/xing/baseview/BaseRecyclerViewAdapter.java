@@ -1,10 +1,8 @@
 package moe.xing.baseview;
 
-import android.support.annotation.Nullable;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.support.v7.widget.util.SortedListAdapterCallback;
 
 /**
  * Created by Hehanbo on 2016/5/17 0017.
@@ -12,62 +10,26 @@ import java.util.List;
  * RecyclerView 的基础适配器
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-public abstract class BaseRecyclerViewAdapter<T, R extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<R> {
-    protected List<T> datas = new ArrayList<>();
+public abstract class BaseRecyclerViewAdapter<T, R extends RecyclerView.ViewHolder> extends BaseSortedRVAdapter<T, R> {
 
     private int addition = 0;
 
-    public int getAddition() {
-        return addition;
-    }
+    public BaseRecyclerViewAdapter(Class<T> kClass) {
+        setDatas(new SortedList<>(kClass, new SortedListAdapterCallback<T>(this) {
+            @Override
+            public int compare(T o1, T o2) {
+                return 0;
+            }
 
-    public void setAddition(int addition) {
-        this.addition = addition;
-    }
+            @Override
+            public boolean areContentsTheSame(T oldItem, T newItem) {
+                return false;
+            }
 
-    @Override
-    public int getItemCount() {
-        return datas == null ? addition : addition + datas.size();
-    }
-
-    @Nullable
-    public T getItem(int postion) {
-        if (postion <= datas.size()) {
-            return datas.get(postion);
-        } else {
-            return null;
-        }
-    }
-
-    public void addData(T data) {
-        datas.add(data);
-        notifyItemInserted(datas.size() - 1);
-    }
-
-    public void addData(@Nullable List<T> dataList) {
-        if (dataList == null) {
-            return;
-        }
-        int start = datas.size();
-        datas.addAll(dataList);
-        notifyItemRangeInserted(start, dataList.size());
-    }
-
-    public void removeDate(T data) {
-        int location = datas.indexOf(data);
-
-        if (location != -1) {
-            datas.remove(data);
-            notifyItemRemoved(location);
-        }
-    }
-
-    public void removeAllDate() {
-        datas.clear();
-        notifyDataSetChanged();
-    }
-
-    public int getDateSize() {
-        return datas.size();
+            @Override
+            public boolean areItemsTheSame(T item1, T item2) {
+                return false;
+            }
+        }));
     }
 }

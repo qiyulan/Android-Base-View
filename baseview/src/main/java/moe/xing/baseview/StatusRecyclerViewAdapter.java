@@ -37,10 +37,10 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
     private static int emptyViewID = 0, loadingViewID = 0, errorViewID = 0;
     private View emptyView = null, loadingView = null, errorView = null;
     @NonNull
-    private BaseRecyclerViewAdapter<T, ? extends RecyclerView.ViewHolder> mAdapter;
+    private BaseSortedRVAdapter<T, ? extends RecyclerView.ViewHolder> mAdapter;
     private int state = STATE_NORMAL;
 
-    public StatusRecyclerViewAdapter(@NonNull BaseRecyclerViewAdapter<T, ? extends RecyclerView.ViewHolder> wrapped,
+    public StatusRecyclerViewAdapter(@NonNull BaseSortedRVAdapter<T, ? extends RecyclerView.ViewHolder> wrapped,
                                      @NonNull Context context) {
         super(wrapped);
         this.state = STATE_LOADING;
@@ -127,7 +127,7 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
     }
 
     @NonNull
-    public BaseRecyclerViewAdapter<T, ? extends RecyclerView.ViewHolder> getAdapter() {
+    public BaseSortedRVAdapter<T, ? extends RecyclerView.ViewHolder> getAdapter() {
         return mAdapter;
     }
 
