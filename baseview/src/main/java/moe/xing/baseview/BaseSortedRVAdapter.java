@@ -17,13 +17,6 @@ public abstract class BaseSortedRVAdapter<T, R extends RecyclerView.ViewHolder> 
     protected SortedList<T> datas;
     private int addition = 0;
 
-    public BaseSortedRVAdapter(Class<T> kClass, SortedList.Callback<T> callback) {
-        this.datas = new SortedList<>(kClass, callback);
-    }
-
-    BaseSortedRVAdapter() {
-    }
-
     public int getAddition() {
         return addition;
     }
