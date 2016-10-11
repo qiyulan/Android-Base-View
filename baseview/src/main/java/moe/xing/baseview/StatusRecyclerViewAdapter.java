@@ -95,8 +95,29 @@ public class StatusRecyclerViewAdapter<T> extends RecyclerViewAdapterWrapper {
         }
     }
 
-    public void deleteItem(T item) {
+    public void addData(@NonNull T item) {
+        mAdapter.addData(item);
+        if (mAdapter.getItemCount() != 0) {
+            setState(STATE_NORMAL);
+        }
+    }
+
+    public void addData(@NonNull List<T> itemList) {
+        mAdapter.addData(itemList);
+        if (mAdapter.getItemCount() != 0) {
+            setState(STATE_NORMAL);
+        }
+    }
+
+    public void deleteItem(@NonNull T item) {
         mAdapter.removeDate(item);
+        if (mAdapter.getItemCount() == 0) {
+            setState(STATE_EMPTY);
+        }
+    }
+
+    public void deleteItem(@NonNull List<T> items) {
+        mAdapter.removeDate(items);
         if (mAdapter.getItemCount() == 0) {
             setState(STATE_EMPTY);
         }

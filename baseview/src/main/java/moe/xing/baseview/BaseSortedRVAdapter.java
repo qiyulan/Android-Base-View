@@ -1,5 +1,6 @@
 package moe.xing.baseview;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
@@ -39,7 +40,7 @@ public abstract class BaseSortedRVAdapter<T, R extends RecyclerView.ViewHolder> 
         }
     }
 
-    public void addData(T data) {
+    public void addData(@NonNull T data) {
         datas.add(data);
     }
 
@@ -51,12 +52,20 @@ public abstract class BaseSortedRVAdapter<T, R extends RecyclerView.ViewHolder> 
         datas.addAll(dataList);
     }
 
-    public void removeDate(T data) {
+    public void removeDate(@NonNull T data) {
         int location = datas.indexOf(data);
 
         if (location != -1) {
             datas.remove(data);
         }
+    }
+
+    public void removeDate(@NonNull List<T> dataList) {
+        datas.beginBatchedUpdates();
+        for (T item : dataList) {
+            datas.remove(item);
+        }
+        datas.endBatchedUpdates();
     }
 
     public void removeAllDate() {
