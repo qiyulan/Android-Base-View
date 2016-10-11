@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-
+apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'jacoco'
 
 android {
     compileSdkVersion rootProject.ext.sdk_version
@@ -20,6 +21,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            testCoverageEnabled true
+        }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -60,5 +68,14 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+coveralls {
+    jacocoReportPath = "${buildDir}/reports/jacoco/debug/jacoco.xml"
+}
+
+tasks.coveralls {
+    dependsOn 'assembleDebugUnitTest'
+    onlyIf { System.env.'CI' }
 }
 
