@@ -23,12 +23,12 @@ public abstract class BaseRecyclerViewAdapter<T, R extends RecyclerView.ViewHold
 
             @Override
             public boolean areContentsTheSame(T oldItem, T newItem) {
-                return false;
+                return oldItem.toString().equals(newItem.toString());
             }
 
             @Override
             public boolean areItemsTheSame(T item1, T item2) {
-                return false;
+                return item1.equals(item2);
             }
         }));
     }
